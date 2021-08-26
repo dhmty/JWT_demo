@@ -15,12 +15,12 @@ public class JwtTest {
                 + ",\"productId\":\"8936046155386\""
                 + "}";
         @Test
-        public void testJWT() {
+        public void testJWT() throws Exception {
 
             Gson gson = new Gson(); // khởi tạo Gson
             Info tmp = gson.fromJson(json, Info.class); // parse Gson về object
             System.out.println("storeId:"+ tmp.info_StoreId);
-            System.out.println("userTd:"+ tmp.info_UserId);
+            System.out.println("userId:"+ tmp.info_UserId);
             System.out.println("productId:"+ tmp.info_ProductId);
 
 
@@ -40,9 +40,9 @@ public class JwtTest {
             return token;
         }
 
-        private void printStructure(String token,String key) {
+        private void printStructure(String token,String key) throws Exception {
+            validateRequest(token,key);
             Jws parseClaimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(token);
-
             System.out.println("Header     : " + parseClaimsJws.getHeader());
             System.out.println("Body       : " + parseClaimsJws.getBody());
             System.out.println("Signature  : " + parseClaimsJws.getSignature());
@@ -53,6 +53,24 @@ public class JwtTest {
             System.out.println(body.toString());
         }
 
+        public static void validateRequest(String token,String serectKey) throws Exception {
+            if (token == null) {
+                throw new Exception("Token is required");
+            }
+            if (!Jwts.parser().setSigningKey(serectKey).parseClaimsJws(token).getHeader().getAlgorithm().equals("HS256"))
+                throw new Exception("Invalid Signature Algorithm");
+            try {
+                Jwts.parser().setSigningKey(serectKey).parseClaimsJws(token);
+            } catch (MalformedJwtException ex) {
+                throw new Exception("Token invalid");
+            } catch (ExpiredJwtException ex) {
+                throw new Exception("Expired JWT token");
+            } catch (UnsupportedJwtException ex) {
+                throw new Exception("Unsupported JWT token");
+            } catch (IllegalArgumentException ex) {
+                throw new Exception("JWT claims string is empty.");
+            }
+        }
         public class Info
         {
             @SerializedName("storeId") // SerializedName giống với Key của Json
