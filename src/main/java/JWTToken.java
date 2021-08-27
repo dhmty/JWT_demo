@@ -1,7 +1,4 @@
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,12 +9,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class JWTToken extends OncePerRequestFilter {
     final String secretKey="NeverGiveUp";
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -43,7 +41,7 @@ public class JWTToken extends OncePerRequestFilter {
         if (token == null) {
             throw new Exception("Token is required");
         }
-        if (!Jwts.parser().setSigningKey(sKey).parseClaimsJws(token).getHeader().getAlgorithm().equals("HS256"))
+        if (Objects.equals(Jwts.parser().setSigningKey(sKey).parseClaimsJws(token).getHeader().getAlgorithm(), String.valueOf(SignatureAlgorithm.HS256)))
             throw new Exception("Invalid Signature Algorithm");
         try {
             Jwts.parser().setSigningKey(sKey).parseClaimsJws(token);

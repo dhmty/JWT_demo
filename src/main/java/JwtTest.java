@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import io.jsonwebtoken.*;
 import org.junit.Test;
 
+import java.util.Objects;
+
 public class JwtTest {
         //JSONObject json = new JSONObject();
 
@@ -57,7 +59,8 @@ public class JwtTest {
             if (token == null) {
                 throw new Exception("Token is required");
             }
-            if (!Jwts.parser().setSigningKey(serectKey).parseClaimsJws(token).getHeader().getAlgorithm().equals("HS256"))
+            if (Objects.equals(Jwts.parser().setSigningKey(serectKey).parseClaimsJws(token).getHeader().getAlgorithm(), String.valueOf(SignatureAlgorithm.HS256)))
+                //System.out.printf("doan");
                 throw new Exception("Invalid Signature Algorithm");
             try {
                 Jwts.parser().setSigningKey(serectKey).parseClaimsJws(token);
