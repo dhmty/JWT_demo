@@ -59,7 +59,7 @@ public class JwtTest {
             if (token == null) {
                 throw new Exception("Token is required");
             }
-            if (Objects.equals(Jwts.parser().setSigningKey(serectKey).parseClaimsJws(token).getHeader().getAlgorithm(), String.valueOf(SignatureAlgorithm.HS256)))
+            if (!Objects.equals(Jwts.parser().setSigningKey(serectKey).parseClaimsJws(token).getHeader().getAlgorithm(), String.valueOf(SignatureAlgorithm.HS256)))
                 //System.out.printf("doan");
                 throw new Exception("Invalid Signature Algorithm");
             try {

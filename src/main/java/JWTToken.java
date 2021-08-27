@@ -41,7 +41,7 @@ public class JWTToken extends OncePerRequestFilter {
         if (token == null) {
             throw new Exception("Token is required");
         }
-        if (Objects.equals(Jwts.parser().setSigningKey(sKey).parseClaimsJws(token).getHeader().getAlgorithm(), String.valueOf(SignatureAlgorithm.HS256)))
+        if (!Objects.equals(Jwts.parser().setSigningKey(sKey).parseClaimsJws(token).getHeader().getAlgorithm(), String.valueOf(SignatureAlgorithm.HS256)))
             throw new Exception("Invalid Signature Algorithm");
         try {
             Jwts.parser().setSigningKey(sKey).parseClaimsJws(token);
