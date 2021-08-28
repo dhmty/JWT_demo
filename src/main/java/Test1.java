@@ -6,4 +6,7 @@ public class Test1 {
     class doan{
         int a;
     }
+    class ad{
+
+    }
 }
