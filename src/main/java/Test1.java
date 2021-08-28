@@ -4,4 +4,10 @@ public class Test1 {
         System.out.println("doan");
         System.out.println("chuc pro 123");
     }
+    class doan{
+        int a;
+    }
+    class ad{
+
+    }
 }
